@@ -22,14 +22,21 @@ namespace Pong
         int playerSpeed = 4;
         int ballXSpeed = -6;
         int ballYSpeed = -6;
+        int playerTurn =1;
 
         bool wPressed = false;
         bool sPressed = false;
+        bool aPressed = false;
+        bool dPressed = false;
         bool upPressed = false;
         bool downPressed = false;
+        bool leftPressed = false;
+        bool rightPressed = false;
 
         SolidBrush blueBrush = new SolidBrush(Color.DodgerBlue);
         SolidBrush whiteBrush = new SolidBrush(Color.White);
+        Pen whiteOutline = new Pen(Color.White, 6);
+        Pen blackOutline = new Pen(Color.Black, 6);
 
         public Form1()
         {
@@ -46,14 +53,25 @@ namespace Pong
                 case Keys.S:
                     sPressed = true;
                     break;
+                case Keys.A:
+                    aPressed = true;
+                    break;
+                case Keys.D:
+                    dPressed = true;
+                    break;
                 case Keys.Up:
                     upPressed = true;
                     break;
                 case Keys.Down:
                     downPressed = true;
                     break;
+                case Keys.Left:
+                    leftPressed = true;
+                    break;
+                case Keys.Right:
+                    rightPressed = true;
+                    break;
             }
-
         }
 
         private void Form1_KeyUp(object sender, KeyEventArgs e)
@@ -66,14 +84,25 @@ namespace Pong
                 case Keys.S:
                     sPressed = false;
                     break;
+                case Keys.A:
+                    aPressed = false;
+                    break;
+                case Keys.D:
+                    dPressed = false;
+                    break;
                 case Keys.Up:
                     upPressed = false;
                     break;
                 case Keys.Down:
                     downPressed = false;
                     break;
+                case Keys.Left:
+                    leftPressed = false;
+                    break;
+                case Keys.Right:
+                    rightPressed = false;
+                    break;
             }
-
         }
 
         private void gameTimer_Tick(object sender, EventArgs e)
@@ -87,16 +116,27 @@ namespace Pong
             {
                 ballYSpeed = -ballYSpeed;
             }
+            if (ball.X <= 0 || ball.X >= this.Width - ball.Width)
+            {
+                ballXSpeed = -ballXSpeed;
+            }
 
             //move player 1
-            if(wPressed == true && player1.Y > 0)
+            if (wPressed == true && player1.Y > 0)
             {
                 player1.Y = player1.Y - playerSpeed;
             }
-
-            if(sPressed == true && player1.Y < this.Height - player1.Height)
+            if (sPressed == true && player1.Y < this.Height - player1.Height)
             {
                 player1.Y = player1.Y + playerSpeed;
+            }
+            if (aPressed == true && player1.X > 0)
+            {
+                player1.X = player1.X - playerSpeed;
+            }
+            if (dPressed == true && player1.X < this.Width - player1.Width)
+            {
+                player1.X = player1.X + playerSpeed;
             }
 
             //move player 2
@@ -104,14 +144,21 @@ namespace Pong
             {
                 player2.Y = player2.Y - playerSpeed;
             }
-
             if (downPressed == true && player2.Y < this.Height - player2.Height)
             {
                 player2.Y = player2.Y + playerSpeed;
             }
+            if (leftPressed == true && player2.X > 0)
+            {
+                player2.X = player2.X - playerSpeed;
+            }
+            if (rightPressed == true && player2.X < this.Width - player2.Width)
+            {
+                player2.X = player2.X + playerSpeed;
+            }
 
             //check if the ball hit player 1
-            if(player1.IntersectsWith(ball))
+            if (player1.IntersectsWith(ball))
             {
                 ballXSpeed = -ballXSpeed;
                 ball.X = player1.X + player1.Width;
@@ -125,7 +172,7 @@ namespace Pong
             }
 
             //check if ball goes off left side of screen
-            if(ball.X <= 0)
+            if (ball.X <= 0)
             {
                 player2Score++;
                 p2ScoreLabel.Text = $"{player2Score}";
@@ -166,7 +213,6 @@ namespace Pong
                 {
                     ballYSpeed = 6;
                 }
-
             }
 
             //check for a winner
@@ -190,7 +236,21 @@ namespace Pong
             e.Graphics.FillRectangle(blueBrush, player1);
             e.Graphics.FillRectangle(blueBrush, player2);
             e.Graphics.FillRectangle(whiteBrush, ball);
+            if (playerTurn == 1)
+            {
+                e.Graphics.DrawRectangle(whiteOutline, player1);
+                e.Graphics.DrawRectangle(blackOutline, player2);
+            }
+            if (playerTurn == 2)
+            {
+                e.Graphics.DrawRectangle(blackOutline, player1);
+                e.Graphics.DrawRectangle(whiteOutline, player2);
+            }
+        }
+
+        private void winLabel_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
- 

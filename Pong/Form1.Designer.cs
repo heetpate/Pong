@@ -69,6 +69,7 @@
             this.winLabel.Size = new System.Drawing.Size(352, 23);
             this.winLabel.TabIndex = 3;
             this.winLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.winLabel.Click += new System.EventHandler(this.winLabel_Click);
             // 
             // gameTimer
             // 
