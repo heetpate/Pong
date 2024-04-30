@@ -22,7 +22,8 @@ namespace Pong
         int playerSpeed = 4;
         int ballXSpeed = -6;
         int ballYSpeed = -6;
-        int playerTurn =1;
+
+        bool player1Turn = true;
 
         bool wPressed = false;
         bool sPressed = false;
@@ -157,18 +158,29 @@ namespace Pong
                 player2.X = player2.X + playerSpeed;
             }
 
-            //check if the ball hit player 1
-            if (player1.IntersectsWith(ball))
+            if (ballXSpeed < 0 && ball.IntersectsWith(player1) && player1Turn)
             {
+                ballXSpeed--;
                 ballXSpeed = -ballXSpeed;
                 ball.X = player1.X + player1.Width;
+                player1Turn = !player1Turn;
+            }
+            else if (ballXSpeed < 0 && ball.IntersectsWith(player1) && !player1Turn)
+            {
+                ballXSpeed = ballXSpeed;
             }
 
-            //check if the ball hit player 2
-            if (player2.IntersectsWith(ball))
+            //check if the ball hit the player2
+            if (ballXSpeed < 0 && ball.IntersectsWith(player2) && !player1Turn)
             {
+                ballXSpeed--;
                 ballXSpeed = -ballXSpeed;
-                ball.X = player2.X - player2.Width;
+                ball.X = player2.X + player2.Width;
+                player1Turn = !player1Turn;
+            }
+            else if (ballXSpeed < 0 && ball.IntersectsWith(player2) && player1Turn)
+            {
+                ballXSpeed = ballXSpeed;
             }
 
             //check if ball goes off left side of screen
@@ -205,15 +217,27 @@ namespace Pong
                 Random randGen = new Random();
                 int randValue = randGen.Next(1, 3);
 
-                if (randValue == 1)
+                 if (randValue == 1)
                 {
-                    ballYSpeed = -6;
+                    ballXSpeed = 6;
                 }
                 else
                 {
-                    ballYSpeed = 6;
+                    ballXSpeed = -6;
+                }
+                ballYSpeed = randGen.Next(-3, 4);
+
+                while (ballYSpeed == 0)
+                {
+                    ballYSpeed = randGen.Next(-3, 4);
                 }
             }
+
+            //check if the ball goes of the right side
+            if (ball.X >= this.Width)
+            {
+                ballXSpeed = -ballXSpeed;
+            }   
 
             //check for a winner
             if (player1Score == 3)
@@ -236,14 +260,14 @@ namespace Pong
             e.Graphics.FillRectangle(blueBrush, player1);
             e.Graphics.FillRectangle(blueBrush, player2);
             e.Graphics.FillRectangle(whiteBrush, ball);
-            if (playerTurn == 1)
+
+            if (player1Turn)
             {
                 e.Graphics.DrawRectangle(whiteOutline, player1);
-                e.Graphics.DrawRectangle(blackOutline, player2);
             }
-            if (playerTurn == 2)
+
+            else
             {
-                e.Graphics.DrawRectangle(blackOutline, player1);
                 e.Graphics.DrawRectangle(whiteOutline, player2);
             }
         }
